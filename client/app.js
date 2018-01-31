@@ -6,9 +6,9 @@ class ViewManager {
     document.getElementById('form-numbers')
       .addEventListener(
         'submit',
-        this.onSubmit);
+        this.onSubmit.bind(this));
   }
-
+  
   onSubmit(event) {
     event.preventDefault();
 
@@ -20,7 +20,11 @@ class ViewManager {
 
     const sum = add(num1, num2);
 
-    alert(sum);
+    this.renderSum(sum);
+  }
+
+  renderSum(sum) {
+    document.getElementById('sum').textContent = sum;
   }
 }
 
