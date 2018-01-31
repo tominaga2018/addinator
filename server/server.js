@@ -8,14 +8,13 @@ const server = http.createServer(function(request, response) {
   let filePath = `./client/${urlPath}`;
 
   fs.stat(filePath, function(err, fileInfo) {
-    if (!err && fileInfo.isDirectory()) {
-      filePath += '/index.html';
-    }
+    if (err) {
+      response.statusCode = 404;
+      response.end(`Resource not found: "${urlPath}"`);
+    } else {
 
-    fs.exists(filePath, function(doesExist) {
-      if (!doesExist) {
-        response.statusCode = 404;
-        response.end(`Resource not found: "${urlPath}"`);
+      if (fileInfo.isDirectory()) {
+        filePath += '/index.html';
       }
 
       fs.readFile(filePath, (err, data) => {
@@ -26,12 +25,12 @@ const server = http.createServer(function(request, response) {
           response.end(data.toString('UTF-8'));
         }
       });
-
-    });
+    }
   });
 
 });
 
+const PORT = process.env.PORT || 3000;
 server.listen(3000, function() {
-  console.log('Server listening...');
+  console.log(`Server listening on port ${PORT}...`);
 });
